@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="imported">
+    <!-- The constants source filename. -->
+    <property name="file.build" value="/com/tristanwaddington/obdlogger/Build.java" />
+
+    <!-- The path to the git executable. -->
+    <property name="git.path" value="/usr/bin/git" />
+
+    <!-- Determine if .git is available in the running directory. -->
+    <available file=".git" type="dir" property="git.present" />
+
+    <!-- Retrive the build version and update the constants source file. -->
+    <target name="-build-version" description="" if="git.present">
+        <exec executable="${git.path}" outputproperty="git.revision" failifexecutionfails="true" errorproperty="">
+            <arg value="rev-parse" />
+            <arg value="--verify" />
+            <arg value="HEAD" />
+        </exec>
+        <echo message="Repository version is ${git.revision}" />
+
+        <replace
+            file="${source.absolute.dir}${file.build}"
+            token="@build-token@"
+            value="${git.revision}"
+            failOnNoReplacements="true"
+            preserveLastModified="true"
+            summary="true" />
+    </target>
+
+    <!-- Run before -build to update the build file. -->
+    <target name="-pre-build">
+        <antcall target="-build-version" />
+    </target>
+
+    <!-- Run after -compile to do any cleanup. -->
+    <target name="-post-compile">
+        <!-- Revert the modified constants file to persist the replace tokens. -->
+        <exec executable="${git.path}" outputproperty="git.revision" failifexecutionfails="true" errorproperty="">
+            <arg value="checkout" />
+            <arg value="${source.absolute.dir}${file.build}" />
+        </exec>
+    </target>
+</project>
