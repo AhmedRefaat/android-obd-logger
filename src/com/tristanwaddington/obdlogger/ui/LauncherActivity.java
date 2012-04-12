@@ -1,23 +1,64 @@
 package com.tristanwaddington.obdlogger.ui;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.tristanwaddington.obdlogger.R;
 
 /** Stub */
 public class LauncherActivity extends Activity {
     private static final String TAG = "LauncherActivity";
+    private static final int BT_REQUEST_CODE = 1;
+    
+    private BluetoothAdapter mBluetoothAdapter;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        // Get our Bluetooth adapter
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        switch (requestCode) {
+        case BT_REQUEST_CODE:
+            if (resultCode == RESULT_OK) {
+                Log.d(TAG, "Bluetooth enabled!");
+            } else {
+                Log.d(TAG, "Bluetooth *not* enabled!");
+            }
+        }
+    }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        
+        if (mBluetoothAdapter != null) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                // Prompt the user if Bluetooth is not enabled.
+                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(intent, BT_REQUEST_CODE);
+            }
+        } else {
+            // TODO: Show a Dialog here presenting the user
+            //       with more specific information.
+            Toast.makeText(this, R.string.error_bluetooth_not_supported,
+                            Toast.LENGTH_LONG).show();
+        }
     }
     
     @Override

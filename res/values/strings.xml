@@ -19,4 +19,7 @@
     
     <!-- Preference labels -->
     <!-- <string name="pref_label_bluetooth_device"></string> -->
+    
+    <!-- Error messages -->
+    <string name="error_bluetooth_not_supported">Your device does not support Bluetooth!</string>
 </resources>
