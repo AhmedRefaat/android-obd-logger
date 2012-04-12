@@ -6,13 +6,28 @@
         <ListPreference
             android:key="@string/pref_key_bluetooth_device"
             android:title="@string/pref_title_bluetooth_device"
-            android:label="@null"
             android:enabled="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_car_dock">
+        <CheckBoxPreference
+            android:key="@string/pref_key_car_mode"
+            android:title="@string/pref_title_car_mode"
+            android:summary="@string/pref_summary_car_mode"
+            android:defaultValue="false" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/pref_cat_about">
-    </PreferenceCategory>
+        <Preference
+            android:key="@string/pref_key_app_version"
+            android:title="@string/pref_title_app_version"
+            android:enabled="false" />
+        <Preference
+            android:key="@string/pref_key_app_build"
+            android:title="@string/pref_title_app_build"
+            android:enabled="false" />
+        <Preference
+            android:key="@string/pref_key_send_feedback"
+            android:title="@string/pref_title_send_feedback" />
+        </PreferenceCategory>
 </PreferenceScreen>

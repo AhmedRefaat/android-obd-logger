@@ -12,10 +12,20 @@ import android.widget.Toast;
 
 import com.tristanwaddington.obdlogger.R;
 
-/** Stub */
+/**
+ * <p>The primary Activity for this application.</p>
+ * 
+ * <p>When started will determine if Bluetooth is supported and
+ * enabled. Will prompt the user for action if Bluetooth is not
+ * currently enabled.</p>
+ * 
+ * @author Tristan Waddington
+ */
 public class LauncherActivity extends Activity {
     private static final String TAG = "LauncherActivity";
     private static final int BT_REQUEST_CODE = 1;
+    
+    private boolean mCancelBluetoothConnect = false;;
     
     private BluetoothAdapter mBluetoothAdapter;
     
@@ -39,6 +49,7 @@ public class LauncherActivity extends Activity {
                 Log.d(TAG, "Bluetooth enabled!");
             } else {
                 Log.d(TAG, "Bluetooth *not* enabled!");
+                mCancelBluetoothConnect = true;
             }
         }
     }
@@ -48,7 +59,7 @@ public class LauncherActivity extends Activity {
         super.onResume();
         
         if (mBluetoothAdapter != null) {
-            if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled() && !mCancelBluetoothConnect) {
                 // Prompt the user if Bluetooth is not enabled.
                 Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(intent, BT_REQUEST_CODE);
